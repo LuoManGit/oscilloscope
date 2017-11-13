@@ -3,12 +3,15 @@ import string
 import time
 import sys
 import array
+import serial
 from comtypes.client import GetModule
 from comtypes.client import CreateObject
-import comtypes.gen.VisaComLib as VisaComLib
+
 # Run GetModule once to generate comtypes.gen.VisaComLib.
 if not hasattr(sys, "frozen"):
     GetModule("D:\GlobMgr.dll")
+import comtypes.gen.VisaComLib as VisaComLib
+
 
 def do_command(command):
     myScope.WriteString("%s" % command, True)
@@ -118,7 +121,8 @@ print "初始寄存器的状态："
 print str2
 #启动single模式
 do_command(":SINGle")
-for i in range(1,2):
+k = 1
+for i in range(1, 1000):
     #示波器准备
     osci_status = do_query_string(":AER?")
     print "示波器状态："
@@ -148,10 +152,15 @@ for i in range(1,2):
     # print "清除MEMMORY4的数据"
 
     #给出采集到数据的信号。写入文档。老师又说不用写了，先用延时。
-    # with open("D:\python27\shiboqi\inter.txt", 'w') as f:
-    #     f.write(j)
-    #     print j
-    # time.sleep(2)
+    # 后来又用了呢。。
+    if k >= 10:
+        k = 1
+    num = str(k)
+    with open("F:\gitcode\oscilloscope\oscilloscope\inter.txt", 'w') as f:
+        f.write(num)
+        print num
+    time.sleep(2)
+    k = k+1
     #
     #循环启动single 准备下一次采集
     time.sleep(1)
